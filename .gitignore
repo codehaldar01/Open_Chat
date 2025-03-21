@@ -1,0 +1,16 @@
+# Node Modules
+node_modules/
+
+
+
+# Environment Variables
+.env
+
+
+# Build files
+dist/
+build/
+
+
+# Editor/IDE files
+.vscode/
