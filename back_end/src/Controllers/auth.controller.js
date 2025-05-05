@@ -94,13 +94,15 @@ const profUpdate=async(req,res)=>{
     try {
         console.log("in updation of profile pic : " + req.body )
         const {profilepic} = req.body;
+        console.log("profile pic: "+profilepic);
         const userId = req.user._id;
         if(!profilepic){
             return res.status(400).json({message:" profile pic required "});
         }
         const cloudinarResponse = await cloudinary.uploader.upload(profilepic);//cloudinary is bucket to store pics, uploading
         //return the profile pic url
-        const updatedUsr =await User.findByIdAndUpdate(userId,{profilepic: cloudinarResponse}, {new: true});//if new:true, it would return how 
+        console.log("Cloudinary response:", cloudinarResponse);
+        const updatedUsr =await User.findByIdAndUpdate(userId,{profilepic: cloudinarResponse.secure_url}, {new: true});//if new:true, it would return how 
         //the object was before adding that new entity int this case it's profilepic and now returning the updated object
         return res.status(200).json(updatedUsr);
     } catch (error) {

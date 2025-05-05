@@ -9,9 +9,10 @@ import useAuthUser from './store/useAuthUser.js'
 import { useEffect } from 'react'
 import { Loader, Cog } from 'lucide-react'
 import {Toaster} from 'react-hot-toast'
+import { useThemeStore } from './store/useThemeStore.js'
 function App() {
   const { authUser, checkAuth, isCheckingAuth } = useAuthUser();
-
+  const {theme} = useThemeStore();
   useEffect(() => {
     const checkUserAuth = async () => {
       await checkAuth();
@@ -31,9 +32,10 @@ function App() {
     )
   }
   console.log("Auth User:", authUser);
+  
 
   return (
-    <>
+    <div data-theme={theme}>
       <Navbar />
       <Routes>
         <Route path="/" element={authUser ? <HomePage /> : <Navigate to={"/login"} />} />
@@ -55,7 +57,7 @@ function App() {
           },
         }}
       />
-    </>
+    </div>
   )
 }
 

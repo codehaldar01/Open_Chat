@@ -70,7 +70,21 @@ const useAuthUser = create((set) => ({
             toast.error("Error logging out:", error);
             console.error("Error logging out:", error);
         }
-    }
+    },
+
+    updateProfile: async (formData) => {
+        set({isUpdatingProfile: true});
+        try {
+            const response = await AxiosInstance.put("/auth/profile-update", formData);
+            set({ authUser: response.data });
+            toast.success("Profile updated successfully");
+        } catch (error) {
+            toast.error("Error updating profile:", error);
+            console.error("Error updating profile:", error);
+        } finally{
+            set({isUpdatingProfile: false});
+        }
+    },
 
 
 }));
