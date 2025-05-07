@@ -1,5 +1,5 @@
 @import 'tailwindcss';
 
 @plugin "daisyui" {
-    themes: light --default, dark --prefersdark, cupcake --cupcake, retro, cyberpunk --cyberpunk, valentine --valentine, fantasy --fantasy, dracula --dracula, business --business, acid --acid, corporate --corporate, synthwave --synthwave, forest --forest, pastel --pastel, wireframe --wireframe, black --black, luxury --luxury, lofi --lofi;
+    themes: light --default, dark --prefersdark, cupcake --cupcake, retro --retro, cyberpunk --cyberpunk, fantasy --fantasy, dracula --dracula, business --business, acid --acid, corporate --corporate, synthwave --synthwave, forest --forest, pastel --pastel, black --black, luxury --luxury, lofi --lofi, halloween --halloween, garden --garden, emerald --emerald, autumn --autumn, winter --winter;
 }
