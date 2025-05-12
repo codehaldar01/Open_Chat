@@ -6,11 +6,11 @@ import msgRoutes from './Routers/msg.route.js';
 import dbConn from './Config/dbConn.js';
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
-
+import { app, server } from './Lib/socket.js';
 
 console.log(process.env.MONGO_URI);
 dbConn();
-const app = express();
+//const app = express();
 const port=process.env.PORT || 5001;
 
 app.use(express.json());
@@ -25,6 +25,6 @@ app.use("/api/auth/",authRoutes);
 app.use("/api/msg/",msgRoutes);
 
 
-const server = app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
 });

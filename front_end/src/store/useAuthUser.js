@@ -3,13 +3,19 @@ import AxiosInstance from "../lib/axios"; // Import the custom axios instance
 // Zustand is a small, fast, and scalable bearbones state-management solution using simplified flux principles.
 // It is a small, fast, and scalable bearbones state-management solution using simplified flux principles.
 import toast from 'react-hot-toast'
-const useAuthUser = create((set) => ({
+import { io } from "socket.io-client";
+// Socket.io is a library that enables real-time, bidirectional, and event-based communication between the browser and the server.
+const BASE_URL = "http://localhost:5001";
+const useAuthUser = create((set, get) => ({
     authUser: null,
     isSigningUp: false,
     isLoggingIn: false,
     isUpdatingProfile: false,
 
     isCheckingAuth: true,
+    onlineUsers: [],
+    socket: null,
+
     checkAuth: async () => {
         try {
             // const response = await fetch("http://localhost:5001/api/auth/check", {
@@ -41,6 +47,7 @@ const useAuthUser = create((set) => ({
             const response = await AxiosInstance.post("/auth/signup", formData);
             set({ authUser: response.data });
             toast.success("Account Created Successfully");
+            get().connectSocket();
         } catch (error) {
             console.error("Error signing up:", error);
         }
@@ -54,6 +61,7 @@ const useAuthUser = create((set) => ({
             const response = await AxiosInstance.post("/auth/signin", formData);
             set({ authUser: response.data });
             toast.success("Logged In Successfully");
+            get().connectSocket();
         } catch (error) {
             console.error("Error logging in:", error);
         }
@@ -66,6 +74,7 @@ const useAuthUser = create((set) => ({
             const response = await AxiosInstance.post("/auth/signout");
             set({ authUser: null });
             toast.success("Logged out successfully");
+            get().disconnectSocket();
         } catch (error) {
             toast.error("Error logging out:", error);
             console.error("Error logging out:", error);
@@ -85,7 +94,20 @@ const useAuthUser = create((set) => ({
             set({isUpdatingProfile: false});
         }
     },
+    connectSocket: () => {
+        const { authUser } = get();
+        if (!authUser || get().socket?.connected) return;
+        const socket = io(BASE_URL);
+        socket.connect();
 
+        set({ socket });
+    },
+    disconnectSocket: () => {
+        if(get().socket?.connected){
+            get().socket.disconnect();
+        }
+        set({ socket: null });
+    }
 
 }));
 
