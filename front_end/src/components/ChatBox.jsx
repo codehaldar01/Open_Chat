@@ -1,15 +1,29 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import useChatStore from '../store/useChatStore'
 import ChatHeader from './ChatHeader.jsx'
 import MsgInput from './MsgInput.jsx'
 import MessageSkeleton from './skeletons/MessageSkeleton.jsx'
 import useAuthUser from '../store/useAuthUser.js'
 const ChatBox = () => {
-    const { messages, getMessages, isMessagesLodding, selectedUser } = useChatStore();
+    const { messages, getMessages, isMessagesLodding, selectedUser, subscribeToNewMessages, unsubscribeFromNewMessages } = useChatStore();
     const { authUser } = useAuthUser();
+    const msgEndRef = useRef(null);
     useEffect(() => {
         getMessages(selectedUser._id)
-    }, [selectedUser._id, getMessages])
+        subscribeToNewMessages();
+
+        return () => {
+            unsubscribeFromNewMessages();
+        }
+    }, [selectedUser._id, getMessages, subscribeToNewMessages, unsubscribeFromNewMessages])
+
+    useEffect(() => {
+        if (msgEndRef.current) {
+            msgEndRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [messages])
+    //scroll to the bottom of the chat when a new message is received
+
     if (isMessagesLodding) return (
         <div className='flex-1 flex flex-col overflow-auto'>
             <ChatHeader />
@@ -22,7 +36,11 @@ const ChatBox = () => {
             <ChatHeader />
             <div className='flex-1 overflow-y-auto p-4 space-y-4'>
                 {messages.map((msg) => (
-                    <div key={msg._id} className={`chat ${msg.senderId === selectedUser._id ? "chat-start" : "chat-end"}`}>
+                    <div
+                        key={msg._id}
+                        className={`chat ${msg.senderId === selectedUser._id ? "chat-start" : "chat-end"}`}
+                        ref={msgEndRef}//referencing the last message to scroll to the bottom
+                    >
                         <div className="chat-image avatar">
                             <div className="size-10 rounded-full">
                                 <img src={msg.senderId === selectedUser._id ? selectedUser.profilepic : authUser.profilepic || "/avatar.png"} alt={msg.senderId === selectedUser._id ? selectedUser.name : authUser.name} />
@@ -39,7 +57,7 @@ const ChatBox = () => {
                                     <img src={msg.image} alt="message" className="max-w-[200px] rounded-lg" />
                                 </div>
                             }
-                        </div> 
+                        </div>
                     </div>
                 ))}
             </div>

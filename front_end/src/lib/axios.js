@@ -2,7 +2,8 @@ import axios from 'axios';
 
 
 const AxiosInstance = axios.create({
-    baseURL: "http://localhost:5001/api",//the base URL that is taken for every fetch request
+    baseURL: import.meta.env.MODE === 'development' ? "http://localhost:5001/api" : "/api",
+    //the base URL that is taken for every fetch request
     withCredentials: true,//to send cookies with requests
     headers: {
         "Content-Type": "application/json",

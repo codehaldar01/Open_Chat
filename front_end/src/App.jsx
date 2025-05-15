@@ -13,6 +13,8 @@ import { useThemeStore } from './store/useThemeStore.js'
 function App() {
   const { authUser, checkAuth, isCheckingAuth } = useAuthUser();
   const {theme} = useThemeStore();
+  const { onlineUsers } = useAuthUser();
+  console.log("Online Users:", {onlineUsers});
   useEffect(() => {
     const checkUserAuth = async () => {
       await checkAuth();

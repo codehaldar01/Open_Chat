@@ -5,7 +5,7 @@ import AxiosInstance from "../lib/axios"; // Import the custom axios instance
 import toast from 'react-hot-toast'
 import { io } from "socket.io-client";
 // Socket.io is a library that enables real-time, bidirectional, and event-based communication between the browser and the server.
-const BASE_URL = "http://localhost:5001";
+const BASE_URL = import.meta.env.MODE === 'development' ? "http://localhost:5001" : "/";
 const useAuthUser = create((set, get) => ({
     authUser: null,
     isSigningUp: false,
@@ -32,6 +32,7 @@ const useAuthUser = create((set, get) => ({
             //const data = await response.json();// response.data is used with axios
             //set({ authUser: data.user, isCheckingAuth: false });
             set({authUser: response.data});
+            get().connectSocket();
         } catch (error) {
             console.error("Error checking auth:", error);
             set({authUser: null});
@@ -97,10 +98,21 @@ const useAuthUser = create((set, get) => ({
     connectSocket: () => {
         const { authUser } = get();
         if (!authUser || get().socket?.connected) return;
-        const socket = io(BASE_URL);
+        const socket = io(BASE_URL, {
+            query: {
+                userId: authUser._id,
+            }
+        });
         socket.connect();
 
         set({ socket });
+
+        socket.on('getOnlineUsers', (users) => {
+            set({ onlineUsers: users });
+        });
+        // here, I use 'getOnlineUsers' as it was sent from the server,
+        // if it was 'x' I would use 'x' here
+        // like:  socket.on('x', (users) => {
     },
     disconnectSocket: () => {
         if(get().socket?.connected){
