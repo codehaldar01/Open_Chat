@@ -8,11 +8,13 @@ import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import { app, server } from './Lib/socket.js';
 import path from 'path';
+import { fileURLToPath } from 'url';
 console.log(process.env.MONGO_URI);
 dbConn();
 //const app = express();
 const port=process.env.PORT || 5001;
-const __dirname = path.resolve();
+//const __dirname = path.resolve();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 //this above is used to get the current directory name
 
 app.use(express.json({ limit: '10mb' }));//use to parse json data
@@ -28,9 +30,9 @@ app.use("/api/auth/",authRoutes);
 app.use("/api/msg/",msgRoutes);
 
 if(process.env.NODE_ENV === 'production'){
-  app.use(express.static(path.join(__dirname, '../front_end/build')));
+  app.use(express.static(path.join(__dirname, '../../front_end/dist')));
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../front_end/build', "dist", 'index.html'));
+    res.sendFile(path.join(__dirname, '../../front_end/dist', 'index.html'));
     //apart from api/auth and api/msg all the requests will be handled by this
     //this will show the index.html file of the front_end/build folder
   });
