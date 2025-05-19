@@ -24,7 +24,7 @@ const ChatBox = () => {
     }, [messages])
     //scroll to the bottom of the chat when a new message is received
 
-    if (isMessagesLodding) return (
+    if (true || isMessagesLodding) return (
         <div className='flex-1 flex flex-col overflow-auto'>
             <ChatHeader />
             <MessageSkeleton />
