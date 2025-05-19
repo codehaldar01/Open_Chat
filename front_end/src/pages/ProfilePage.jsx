@@ -20,15 +20,15 @@ const ProfilePage = () => {
             //toast.success("Profile picture updated successfully!");
         };
     };
-    if (!authUser) {
-        return (
-            <div className="flex justify-center items-center h-screen">
-                {/* <h1 className="text-2xl font-bold">Loading...</h1> */}
-                <Loader className="size-15 animate-spin text-blue-600 " />
-                {/* <Cog className="size-15 animate-spin  text-pink-600" /> */}
-            </div>
-        )
-    }
+    // if (!authUser) {
+    //     return (
+    //         <div className="flex justify-center items-center h-screen">
+    //             {/* <h1 className="text-2xl font-bold">Loading...</h1> */}
+    //             <Loader className="size-15 animate-spin text-blue-600 " />
+    //             {/* <Cog className="size-15 animate-spin  text-pink-600" /> */}
+    //         </div>
+    //     )
+    // }
     return (
         <div className="h-screen pt-20">
             <div className="max-w-2xl mx-auto p-4 py-8">
